@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLINGSHOT</title>
+  <title>JACK TIERNEY</title>
 
-  <!-- Preload and optimize font loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
 
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
 
     body {
-      margin: 0;
-      height: 100vh;
       display: flex;
       font-family: 'VT323', monospace;
       background: #d2d2d2;
       color: #111;
-      position: relative;
-      overflow: hidden;
     }
 
-    /* Inline grain pattern using data URI to avoid external dependency */
+    /* ── GRAIN ── */
     .grain {
       pointer-events: none;
       position: fixed;
@@ -37,7 +36,6 @@
       mix-blend-mode: overlay;
     }
 
-    /* Heavier grain for landing page only */
     #landing .grain-landing {
       pointer-events: none;
       position: fixed;
@@ -49,60 +47,63 @@
       mix-blend-mode: overlay;
     }
 
-    /* Ensure videos and iframes are above the grain */
-    .collage-item,
-    .iframe-wrapper {
-      position: relative;
-      z-index: 10;
-    }
-
+    /* ── ANIMATIONS ── */
     @keyframes jitter {
-      0% { transform: translate(0,0); }
-      25% { transform: translate(-1px,1px); }
-      50% { transform: translate(1px,-1px); }
-      75% { transform: translate(-1px,0); }
+      0%   { transform: translate(0,0); }
+      25%  { transform: translate(-1px,1px); }
+      50%  { transform: translate(1px,-1px); }
+      75%  { transform: translate(-1px,0); }
       100% { transform: translate(0,0); }
     }
-
     @keyframes grainMove {
-      0% { transform: translate(0,0); }
-      20% { transform: translate(-50px,30px); }
-      40% { transform: translate(40px,-30px); }
-      60% { transform: translate(-30px,20px); }
-      80% { transform: translate(20px,-40px); }
+      0%   { transform: translate(0,0); }
+      20%  { transform: translate(-50px,30px); }
+      40%  { transform: translate(40px,-30px); }
+      60%  { transform: translate(-30px,20px); }
+      80%  { transform: translate(20px,-40px); }
       100% { transform: translate(0,0); }
     }
+    @keyframes flickerIn {
+      0%   { opacity: 0; }
+      70%  { opacity: 0.9; }
+      75%  { opacity: 0.7; }
+      80%  { opacity: 1; }
+      85%  { opacity: 0.85; }
+      90%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+    @keyframes rf1 { 0%{opacity:1}50%{opacity:.75}100%{opacity:1} }
+    @keyframes rf2 { 0%{opacity:1}30%{opacity:.8}60%{opacity:.7}100%{opacity:1} }
+    @keyframes rf3 { 0%{opacity:1}50%{opacity:.85}100%{opacity:1} }
 
+    /* ── SIDEBAR ── */
     .sidebar {
-      width: 240px;
-      padding: 30px 20px;
+      width: 220px;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: space-between;
+      padding: 28px 20px 28px 20px;
       z-index: 2;
-      margin-top: 0;
-      position: relative;
+      height: 100vh;
     }
 
     .brand {
-      font-size: 60px;
-      letter-spacing: 6px;
-      margin-bottom: 30px;
-      margin-top: -8px;
+      font-size: 38px;
+      letter-spacing: 4px;
+      line-height: 1.05;
       cursor: pointer;
+      transition: opacity .12s;
+      user-select: none;
     }
+    .brand:hover { opacity: .6; animation: jitter 1s steps(2) 1; }
+    .brand.active { text-decoration: underline; }
 
     .menu {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 20px;
-      margin-top: 0;
+      gap: 16px;
     }
-
     .menu button {
       background: none;
       border: none;
@@ -114,629 +115,636 @@
       text-transform: uppercase;
       letter-spacing: 4px;
       font-family: inherit;
-      transition: transform .12s steps(2), opacity .12s;
+      transition: opacity .12s;
     }
-
-    .menu button:hover {
-      opacity: .6;
-      animation: jitter 1s steps(2) 1;
-    }
-
+    .menu button:hover { opacity: .6; animation: jitter 1s steps(2) 1; }
     .menu button.active { text-decoration: underline; }
 
-    .social {
-      font-size: 25px;
-      position: absolute;
-      bottom: 40px;
-      left: 50px;
-      color: #111;
-      text-decoration: none;
-      cursor: pointer;
-      z-index: 1001;
-      pointer-events: auto;
+    .sidebar-footer {
+      font-size: 14px;
+      letter-spacing: 2px;
+      opacity: 0.4;
+      text-transform: uppercase;
     }
 
-    .social:hover, .about:hover { opacity: .6; }
-
+    /* ── CONTENT ── */
     .content {
       flex: 1;
-      padding-left: 80px;
-      padding-right: 80px;
-      padding-top: 210px;
-      padding-bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
       z-index: 2;
+      min-width: 0;
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; width: 100%; height: 100%; }
+    .page.active { display: flex; flex-direction: column; }
+
+    /* ── CATEGORY PAGE ── */
+    /* 3 rows that together fill exactly the available height */
+    .category-page {
+      padding: 0 40px 0 0;
+      justify-content: space-between;  /* rows share height evenly */
+      gap: 0;
+    }
+
+    .project-row {
+      flex: 1;                  /* each row takes 1/3 of available height */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      min-height: 0;
+      padding: 6px 0;
+    }
+
+    .project-row-label {
+      font-size: 15px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      opacity: 0.45;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    /* The horizontal scroll strip */
+    .project-row-scroll {
       overflow-x: auto;
       overflow-y: hidden;
-      height: 100vh;
       white-space: nowrap;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      flex: 1;
+      min-height: 0;
     }
+    .project-row-scroll::-webkit-scrollbar { display: none; }
 
-    .content::-webkit-scrollbar {
-      display: none;
-    }
-
-    .page { 
-      display: none; 
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    #finnegan, #zephyr, #bayefall {
-      white-space: nowrap;
-      max-width: none;
-      position: relative;
-    }
-
-    /* Wrapper for iframes to capture scroll */
-    .iframe-wrapper {
-      display: inline-block;
-      position: relative;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      vertical-align: top;
-      width: 72vw;
-      height: 64vh;
-    }
-    
-    .iframe-wrapper iframe {
-      width: 100%;
+    .project-row-scroll-inner {
+      display: inline-flex;
+      align-items: stretch;
       height: 100%;
-      border: none;
-      margin: 0;
-      display: block;
-      pointer-events: none;
+      gap: 5px;
     }
 
-    /* Click to activate overlay */
-    .iframe-wrapper::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: transparent;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    /* When activated, enable iframe */
-    .iframe-wrapper.active::before {
-      display: none;
-    }
-    
-    .iframe-wrapper.active iframe {
-      pointer-events: auto;
-    }
-
-    .clients {
-      position: fixed;
-      bottom: 40px;
-      left: 20px;
-      font-size: 18px;
-      letter-spacing: 3px;
-      opacity: .7;
-      text-align: left;
-      white-space: nowrap;
-      z-index: 5;
-    }
-
-    .clients.hidden { 
-      display: none; 
-    }
-
-    /* Hide page-clients on desktop */
-    .page-clients {
-      display: none;
-    }
-
-    /* Mobile clients positioning */
-    @media (max-width: 768px) {
-      .clients {
-        display: none; /* Hide the original fixed one on mobile */
-      }
-      
-      .page-clients {
-        display: block;
-        font-size: 14px;
-        letter-spacing: 1px;
-        padding: 40px 20px 60px 20px;
-        line-height: 1.5;
-        white-space: normal;
-        margin-top: 40px;
-        opacity: .7;
-      }
-    }
-
-    .collage {
-      position: relative;
-      height: 800px;
-      margin-top: 40px;
-    }
-
-    .collage-item {
-      position: absolute;
-      width: 520px;
-      cursor: grab;
-      user-select: none;
-      transition: transform .15s;
-      resize: both;
-      overflow: auto;
-      min-width: 240px;
-      min-height: 160px;
+    /* Videos fill the row height, maintaining 16:9 */
+    .project-row-scroll-inner video {
+      height: 100%;
+      aspect-ratio: 16 / 9;
       object-fit: cover;
-      pointer-events: auto; /* Allow video interaction */
+      display: block;
+      flex-shrink: 0;
+      background: #b8b8b8;
+      transition: opacity 0.2s;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
       z-index: 10;
     }
 
-    .collage-item:active { cursor: grabbing; }
+    /* Paused = dim; hovered row = full brightness */
+    .project-row-scroll-inner video.paused-dim { opacity: 0.55; }
+    .project-row:hover .project-row-scroll-inner video { opacity: 1 !important; }
 
-    /* Landing page overlay with smooth fade */
+    /* ── PROJECT PAGE ── */
+    #project-page {
+      overflow-y: auto;
+      padding: 32px 60px 80px 0;
+      scrollbar-width: none;
+    }
+    #project-page::-webkit-scrollbar { display: none; }
+
+    .project-back {
+      font-size: 17px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      opacity: 0.45;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+    .project-back:hover { opacity: 1; }
+
+    .project-title {
+      font-size: 60px;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      line-height: 1;
+    }
+
+    .project-embed-wrapper {
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16/9;
+      margin-bottom: 44px;
+      background: #b8b8b8;
+      position: relative;
+      z-index: 10;
+    }
+    .project-embed-wrapper iframe,
+    .project-embed-wrapper video {
+      width: 100%; height: 100%;
+      border: none; display: block;
+    }
+
+    .project-body { max-width: 680px; }
+    .project-body p {
+      font-size: 21px;
+      line-height: 1.6;
+      letter-spacing: 1px;
+      margin-bottom: 22px;
+    }
+    .project-body a { color: #111; }
+    .project-body a:hover { opacity: .6; }
+
+    .project-photos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 36px;
+    }
+    .project-photos img {
+      width: calc(33.333% - 7px);
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    /* ── ABOUT PAGE ── */
+    #about {
+      overflow-y: auto;
+      padding: 32px 60px 80px 0;
+      scrollbar-width: none;
+    }
+    #about::-webkit-scrollbar { display: none; }
+    #about p {
+      font-size: 22px;
+      line-height: 1.6;
+      letter-spacing: 1px;
+      max-width: 700px;
+      margin-bottom: 22px;
+    }
+    #about a { color: #111; }
+    #about a:hover { opacity: .6; }
+
+    /* ── LANDING ── */
     #landing {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
+      inset: 0;
       background: #d2d2d2;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
       cursor: pointer;
-      opacity: 1;
       transition: opacity 1.2s ease;
     }
-
-    #landing.fading {
-      opacity: 0;
-    }
-
-    #landing.hidden {
-      display: none;
-    }
+    #landing.fading { opacity: 0; }
+    #landing.hidden { display: none; }
 
     #landing-text {
-      font-size: 120px;
-      letter-spacing: 18px;
-      font-family: 'VT323', monospace;
-      animation: 
+      font-size: 100px;
+      letter-spacing: 14px;
+      text-align: center;
+      line-height: 1;
+      opacity: 0;
+      animation:
         flickerIn 1s ease-in forwards,
         jitter 1.8s steps(3) infinite 1s,
-        randomFlicker1 0.15s ease-in-out 3.2s,
-        randomFlicker2 0.2s ease-in-out 6.8s,
-        randomFlicker3 0.12s ease-in-out 11.5s,
-        randomFlicker1 0.14s ease-in-out 11.75s,
-        randomFlicker2 0.18s ease-in-out 15.3s,
-        randomFlicker3 0.16s ease-in-out 20.1s,
-        randomFlicker1 0.13s ease-in-out 24.7s,
-        randomFlicker2 0.19s ease-in-out 29.9s,
-        randomFlicker1 0.15s ease-in-out 30.15s,
-        randomFlicker3 0.17s ease-in-out 34.2s,
-        randomFlicker2 0.14s ease-in-out 39.6s,
-        randomFlicker3 0.16s ease-in-out 43.8s,
-        randomFlicker1 0.13s ease-in-out 48.5s,
-        randomFlicker2 0.15s ease-in-out 53.2s,
-        randomFlicker3 0.18s ease-in-out 57.8s,
-        randomFlicker1 0.14s ease-in-out 58.05s;
-      opacity: 0;
+        rf1 0.15s ease-in-out 3.2s,
+        rf2 0.2s  ease-in-out 6.8s,
+        rf3 0.12s ease-in-out 11.5s,
+        rf1 0.14s ease-in-out 11.75s,
+        rf2 0.18s ease-in-out 15.3s,
+        rf3 0.16s ease-in-out 20.1s;
     }
 
-    @keyframes flickerIn {
-      0% { opacity: 0; }
-      70% { opacity: 0.9; }
-      75% { opacity: 0.7; }
-      80% { opacity: 1; }
-      85% { opacity: 0.85; }
-      90% { opacity: 1; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes randomFlicker1 {
-      0% { opacity: 1; }
-      50% { opacity: 0.75; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes randomFlicker2 {
-      0% { opacity: 1; }
-      30% { opacity: 0.8; }
-      60% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes randomFlicker3 {
-      0% { opacity: 1; }
-      50% { opacity: 0.85; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes fadeInText {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    #about {
-      font-size: 22px;
-      line-height: 1.6;
-      max-width: 800px;
-    }
-
-    #about p {
-      margin-left: -60px;
-    }
-
-    #about a {
-      color: #111;
-    }
-
-    #about a:hover {
-      opacity: .6;
-    }
-
-    /* Mobile and Tablet styles */
+    /* ═══════════════════════════════════════════════════════
+       MOBILE  (≤ 768px)
+       Vertical layout: nav bar at top, rows stack below,
+       each row shows videos as a horizontal scroll strip
+       ═══════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
+      html, body { overflow: auto; height: auto; }
+
+      body { flex-direction: column; }
 
       .sidebar {
         width: 100%;
-        padding: 20px 20px 10px 20px;
+        height: auto;
         flex-direction: column;
-        position: fixed;
+        padding: 16px 16px 12px;
+        position: sticky;
         top: 0;
-        left: 0;
-        z-index: 3;
         background: #d2d2d2;
-      }
-
-      .brand {
-        font-size: 42px;
-        margin-bottom: 15px;
-        margin-top: 0;
-        text-align: left;
-      }
-
-      .menu {
-        position: static;
-        transform: none;
-        flex-direction: row;
-        gap: 15px;
-        margin-top: 0;
-        left: 0;
-        display: flex;
-        flex-wrap: wrap;
+        z-index: 100;
+        gap: 10px;
         justify-content: flex-start;
       }
 
-      .menu button {
-        font-size: 16px;
-        letter-spacing: 2px;
+      .sidebar-footer { display: none; }
+
+      .brand { font-size: 30px; letter-spacing: 3px; }
+
+      .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px 20px;
       }
+      .menu button { font-size: 17px; letter-spacing: 2px; }
 
       .content {
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 140px;
-        padding-bottom: 20px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        white-space: normal;
-      }
-
-      #finnegan, #zephyr, #bayefall {
-        white-space: normal;
-      }
-
-      .iframe-wrapper {
-        display: block;
-        width: 100%;
-        height: 56vw;
-        min-height: 240px;
-        margin-right: 0;
-        margin-bottom: 20px;
-      }
-
-      .collage {
         height: auto;
-        margin-top: 20px;
+        overflow: visible;
+        flex-direction: column;
       }
 
-      .collage-item {
-        position: relative;
-        width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-        resize: none;
-        left: 0 !important;
-        top: 0 !important;
-        transform: none !important;
+      /* Each page fills naturally, no fixed height */
+      .page { height: auto; flex-direction: column; }
+      .page.active { display: flex; }
+
+      .category-page {
+        padding: 0 16px 40px 16px;
+        gap: 24px;
+        justify-content: flex-start;
       }
 
-      .clients {
-        position: relative;
-        margin-top: 40px;
-        margin-bottom: 40px;
+      .project-row {
+        flex: none;
         padding: 0;
-        font-size: 12px;
-        bottom: auto;
-        left: auto;
+        justify-content: flex-start;
       }
 
-      .clients.hidden {
-        display: block;
+      .project-row-label { margin-bottom: 8px; font-size: 14px; }
+
+      .project-row-scroll {
+        flex: none;
+        /* fixed height on mobile: video strip is 42vw tall (16:9 videos are ~23.6vw wide) */
+        height: 26vw;
+        min-height: 100px;
       }
 
-      #landing-text {
-        font-size: 64px;
-        letter-spacing: 10px;
-      }
+      .project-row-scroll-inner { height: 100%; }
 
+      #project-page,
       #about {
-        font-size: 18px;
-        line-height: 1.6;
+        padding: 24px 16px 60px;
+        overflow-y: visible;
       }
 
-      #about p {
-        margin-left: 0;
-      }
+      .project-title { font-size: 38px; letter-spacing: 4px; }
+      .project-photos img { width: calc(50% - 5px); }
+
+      #landing-text { font-size: 60px; letter-spacing: 8px; }
     }
 
-    /* Tablet adjustments */
+    /* TABLET (769–1024) */
     @media (min-width: 769px) and (max-width: 1024px) {
-      .sidebar {
-        width: 180px;
-      }
-
-      .brand {
-        font-size: 48px;
-      }
-
-      .menu button {
-        font-size: 18px;
-      }
-
-      .content {
-        padding-left: 40px;
-        padding-right: 40px;
-        padding-top: 150px;
-      }
-
-      .iframe-wrapper {
-        width: 80vw;
-        height: 60vh;
-      }
-
-      .collage-item {
-        width: 400px;
-      }
+      .sidebar { width: 180px; }
+      .brand { font-size: 32px; }
+      .menu button { font-size: 19px; }
+      .category-page { padding-right: 24px; }
     }
-
   </style>
 </head>
 <body>
 
-  <!-- Landing page overlay with smooth fade -->
+  <!-- Landing -->
   <div id="landing">
     <div class="grain-landing"></div>
-    <div id="landing-text">SLINGSHOT</div>
+    <div id="landing-text">JACK<br>TIERNEY</div>
   </div>
 
   <div class="grain"></div>
 
+  <!-- Sidebar -->
   <div class="sidebar">
-    <div class="brand" onclick="showPage('about')">SLINGSHOT</div>
+    <div class="brand" id="brand-btn" onclick="showAbout()">JACK<br>TIERNEY</div>
     <div class="menu">
-      <button class="active" onclick="showPage('experimentation', this)">EXPERIMENTS</button>
-      <button onclick="showPage('zephyr', this)">ZEPHYR</button>
-      <button onclick="showPage('bayefall', this)">BAYE FALL</button>
-      <button onclick="showPage('finnegan', this)">FINNEGAN TUI</button>
+      <button onclick="showCategory('personal', this)">PERSONAL</button>
+      <button onclick="showCategory('commercial', this)">COMMERCIAL</button>
+      <button onclick="showCategory('skating', this)">SKATING</button>
     </div>
+    <div class="sidebar-footer">© Jack Tierney</div>
   </div>
 
-  <div class="clients">
-    PREVIOUS CLIENTS - NIKE, SONY, UNIVERSAL MUSIC, VOLKSWAGEN, POLYDOR, BMW, JADEDLDN, ACER, LEE JEANS
-  </div>
-
+  <!-- Content -->
   <div class="content">
 
-    <div id="experimentation" class="page active">
+    <!-- ── PERSONAL ── -->
+    <div id="personal" class="page category-page active">
 
-      <div class="collage" id="collage">
-        <!-- EXPERIMENTATION VIDEOS (SAVED LAYOUT) -->
-        <video class="collage-item" data-src="videos/experimentation-1.mp4" poster="thumbnails/experimentation-1.jpg" style="left: -69px; top: 479px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-3.mp4" poster="thumbnails/experimentation-3.jpg" style="left: -69px; top: -134px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-4.mp4" poster="thumbnails/experimentation-4.jpg" style="left: 467px; top: 479px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-5.mp4" poster="thumbnails/experimentation-5.jpg" style="left: 2077px; top: -140px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-6.mp4" poster="thumbnails/experimentation-6.jpg" style="left: -69px; top: 173px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-8.mp4" poster="thumbnails/experimentation-8.jpg" style="left: 1540px; top: -138px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-9.mp4" poster="thumbnails/experimentation-9.jpg" style="left: 466px; top: 173px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-10.mp4" poster="thumbnails/experimentation-10.jpg" style="left: 1002px; top: 481px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-11.mp4" poster="thumbnails/experimentation-11.jpg" style="left: 2077px; top: 171px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-12.mp4" poster="thumbnails/experimentation-12.jpg" style="left: 466px; top: -135px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-13.mp4" poster="thumbnails/experimentation-13.jpg" style="left: 1539px; top: 482px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-14.mp4" poster="thumbnails/experimentation-14.jpg" style="left: 1540px; top: 172px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-15.mp4" poster="thumbnails/experimentation-15.jpg" style="left: 1003px; top: 172px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-16.mp4" poster="thumbnails/experimentation-16.jpg" style="left: -69px; top: 480px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-17.mp4" poster="thumbnails/experimentation-17.jpg" style="left: 2077px; top: -138px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-18.mp4" poster="thumbnails/experimentation-18.jpg" style="left: 1003px; top: -137px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
-        <video class="collage-item" data-src="videos/experimentation-19.mp4" poster="thumbnails/experimentation-19.jpg" style="left: 2076px; top: 483px; transform: rotate(0deg); z-index: 999;" muted loop playsinline preload="none"></video>
+      <div class="project-row" data-project-id="personal-project-1">
+        <div class="project-row-label">Zephyr</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="personal/project-1/clip-1.mp4" poster="personal/project-1/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-1/clip-2.mp4" poster="personal/project-1/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-1/clip-3.mp4" poster="personal/project-1/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-1/clip-4.mp4" poster="personal/project-1/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-1/clip-5.mp4" poster="personal/project-1/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
       </div>
 
-      <div class="page-clients">
-        PREVIOUS CLIENTS - NIKE, SONY, UNIVERSAL MUSIC,<br>VOLKSWAGEN, POLYDOR, BMW, JADEDLDN, ACER, LEE JEANS
+      <div class="project-row" data-project-id="personal-project-2">
+        <div class="project-row-label">Baye Fall</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="personal/project-2/clip-1.mp4" poster="personal/project-2/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-2/clip-2.mp4" poster="personal/project-2/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-2/clip-3.mp4" poster="personal/project-2/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-2/clip-4.mp4" poster="personal/project-2/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-2/clip-5.mp4" poster="personal/project-2/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
       </div>
 
-    </div>
+      <div class="project-row" data-project-id="personal-project-3">
+        <div class="project-row-label">Experimentation</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="personal/project-3/clip-1.mp4" poster="personal/project-3/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-3/clip-2.mp4" poster="personal/project-3/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-3/clip-3.mp4" poster="personal/project-3/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-3/clip-4.mp4" poster="personal/project-3/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="personal/project-3/clip-5.mp4" poster="personal/project-3/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
 
-    <div id="zephyr" class="page">
-      <div class="iframe-wrapper">
-        <iframe src="https://www.youtube.com/embed/54SxblKJLVg?rel=0" allowfullscreen></iframe>
-      </div>
-      <div class="page-clients">
-        PREVIOUS CLIENTS - NIKE, SONY, UNIVERSAL MUSIC,<br>VOLKSWAGEN, POLYDOR, BMW, JADEDLDN, ACER, LEE JEANS
-      </div>
-    </div>
+    </div><!-- /personal -->
 
-    <div id="bayefall" class="page">
-      <div class="iframe-wrapper">
-        <iframe src="https://player.vimeo.com/video/1082279741?h=1db9f8663b" allowfullscreen></iframe>
-      </div>
-      <div class="page-clients">
-        PREVIOUS CLIENTS - NIKE, SONY, UNIVERSAL MUSIC,<br>VOLKSWAGEN, POLYDOR, BMW, JADEDLDN, ACER, LEE JEANS
-      </div>
-    </div>
+    <!-- ── COMMERCIAL ── -->
+    <div id="commercial" class="page category-page">
 
-    <div id="finnegan" class="page">
-      <div class="iframe-wrapper">
-        <iframe src="https://www.youtube.com/embed/VWEVTCprNh0?rel=0" allowfullscreen></iframe>
+      <div class="project-row" data-project-id="commercial-project-1">
+        <div class="project-row-label">Childish</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="commercial/project-1/clip-1.mp4" poster="commercial/project-1/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-1/clip-2.mp4" poster="commercial/project-1/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-1/clip-3.mp4" poster="commercial/project-1/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-1/clip-4.mp4" poster="commercial/project-1/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-1/clip-5.mp4" poster="commercial/project-1/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
       </div>
-      <div class="iframe-wrapper">
-        <iframe src="https://www.youtube.com/embed/SWyE6l_uQ60?rel=0" allowfullscreen></iframe>
-      </div>
-      <div class="iframe-wrapper">
-        <iframe src="https://www.youtube.com/embed/hD8spFPys5s?rel=0" allowfullscreen></iframe>
-      </div>
-      <div class="iframe-wrapper">
-        <iframe src="https://spikeadams.com/reel" allowfullscreen></iframe>
-      </div>
-      <div class="page-clients">
-        PREVIOUS CLIENTS - NIKE, SONY, UNIVERSAL MUSIC,<br>VOLKSWAGEN, POLYDOR, BMW, JADEDLDN, ACER, LEE JEANS
-      </div>
-    </div>
 
+      <div class="project-row" data-project-id="commercial-project-2">
+        <div class="project-row-label">Chase and Status</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="commercial/project-2/clip-1.mp4" poster="commercial/project-2/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-2/clip-2.mp4" poster="commercial/project-2/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-2/clip-3.mp4" poster="commercial/project-2/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-2/clip-4.mp4" poster="commercial/project-2/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-2/clip-5.mp4" poster="commercial/project-2/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-row" data-project-id="commercial-project-3">
+        <div class="project-row-label">Jaded</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="commercial/project-3/clip-1.mp4" poster="commercial/project-3/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-3/clip-2.mp4" poster="commercial/project-3/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-3/clip-3.mp4" poster="commercial/project-3/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-3/clip-4.mp4" poster="commercial/project-3/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="commercial/project-3/clip-5.mp4" poster="commercial/project-3/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /commercial -->
+
+    <!-- ── SKATING ── -->
+    <div id="skating" class="page category-page">
+
+      <div class="project-row" data-project-id="skating-project-1">
+        <div class="project-row-label">Nike</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="skating/project-1/clip-1.mp4" poster="skating/project-1/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-1/clip-2.mp4" poster="skating/project-1/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-1/clip-3.mp4" poster="skating/project-1/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-1/clip-4.mp4" poster="skating/project-1/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-1/clip-5.mp4" poster="skating/project-1/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-row" data-project-id="skating-project-2">
+        <div class="project-row-label">AIM</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="skating/project-2/clip-1.mp4" poster="skating/project-2/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-2/clip-2.mp4" poster="skating/project-2/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-2/clip-3.mp4" poster="skating/project-2/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-2/clip-4.mp4" poster="skating/project-2/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-2/clip-5.mp4" poster="skating/project-2/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-row" data-project-id="skating-project-3">
+        <div class="project-row-label">Zephyr</div>
+        <div class="project-row-scroll">
+          <div class="project-row-scroll-inner">
+            <video data-src="skating/project-3/clip-1.mp4" poster="skating/project-3/thumb-1.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-3/clip-2.mp4" poster="skating/project-3/thumb-2.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-3/clip-3.mp4" poster="skating/project-3/thumb-3.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-3/clip-4.mp4" poster="skating/project-3/thumb-4.jpg" muted loop playsinline preload="none"></video>
+            <video data-src="skating/project-3/clip-5.mp4" poster="skating/project-3/thumb-5.jpg" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /skating -->
+
+    <!-- ── ABOUT ── -->
     <div id="about" class="page">
-      <p>SLINGSHOT is a group of filmmakers working in a variety of fields,<br>unified by their collective excitement about 'WOMPING' (definition: serious play).</p>
-      <p>
-        <a href="https://spikeadams.com/" target="_blank">SPIKE ADAMS</a>,
-        <a href="https://jacktierney.myportfolio.com/" target="_blank">JACK TIERNEY</a>,
-        LUKE HARRISON-DARBY,
-        <a href="https://www.longboifilms.co.uk/" target="_blank">SAM SUTHERLAND</a>
-      </p>
-      <p style="margin-top:30px;">
-        <a id="instagram-link" href="https://www.instagram.com/slingshotmascara" target="_blank" rel="noopener">INSTAGRAM</a>
-      </p>
+      <p>Write something about yourself here.</p>
+      <p><a href="https://www.instagram.com/" target="_blank" rel="noopener">INSTAGRAM</a></p>
     </div>
 
-    <div id="empty" class="page"></div>
+    <!-- ── PROJECT PAGE ── -->
+    <div id="project-page" class="page">
+      <span class="project-back" id="project-back-btn">← BACK</span>
+      <div class="project-title" id="project-title"></div>
+      <div class="project-embed-wrapper" id="project-embed"></div>
+      <div class="project-body" id="project-body"></div>
+    </div>
 
-  </div>
+  </div><!-- /.content -->
 
   <script>
-    function showPage(id, btn) {
+    // ─────────────────────────────────────────────────────────────────────────
+    // PROJECT DATA — fill in titles, embed URLs, descriptions, photos as needed
+    // ─────────────────────────────────────────────────────────────────────────
+    const PROJECTS = {
+      'personal-project-1':   { title:'Zephyr',          category:'personal',   embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'personal-project-2':   { title:'Baye Fall',       category:'personal',   embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'personal-project-3':   { title:'Experimentation', category:'personal',   embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'commercial-project-1': { title:'Childish',        category:'commercial', embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'commercial-project-2': { title:'Chase and Status',category:'commercial', embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'commercial-project-3': { title:'Jaded',           category:'commercial', embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'skating-project-1':    { title:'Nike',            category:'skating',    embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'skating-project-2':    { title:'AIM',             category:'skating',    embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+      'skating-project-3':    { title:'Zephyr',          category:'skating',    embedUrl:'', videoSrc:'', description:'<p>Write about this project here.</p>', photos:[] },
+    };
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    const isMobile = () => window.innerWidth <= 768;
+
+    function clearActive() {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+      document.getElementById('brand-btn').classList.remove('active');
+    }
+
+    function loadAndPlay(v) {
+      if (!v.getAttribute('src')) {
+        v.src = v.getAttribute('data-src');
+        v.load();
+      }
+      v.classList.remove('paused-dim');
+      v.play().catch(() => {});
+    }
+
+    function pauseAndDim(v) {
+      v.pause();
+      v.classList.add('paused-dim');
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+    let currentCategory = 'personal';
+
+    function showCategory(id, btn) {
+      currentCategory = id;
+      clearActive();
       document.getElementById(id).classList.add('active');
-      if(btn) btn.classList.add('active');
-
-      // hide clients on about page
-      const clients = document.querySelector('.clients');
-      if (clients) {
-        if (id === 'about') {
-          clients.classList.add('hidden');
-        } else {
-          clients.classList.remove('hidden');
-        }
-      }
+      if (btn) btn.classList.add('active');
+      scrollToTop();
+      rebindScrollHandlers();
     }
 
-    function initCollage() {
-      const items = document.querySelectorAll('.collage-item');
-      const EDIT_MODE = false;
+    function showAbout() {
+      clearActive();
+      document.getElementById('about').classList.add('active');
+      document.getElementById('brand-btn').classList.add('active');
+      scrollToTop();
+    }
 
-      let activeItem = null;
-      let offset = [0,0];
+    function openProject(projectId) {
+      const project = PROJECTS[projectId];
+      if (!project) return;
+      currentCategory = project.category;
 
-      items.forEach((item, i) => {
-        // Load and autoplay videos
-        const realSrc = item.getAttribute('data-src');
-        
-        item.src = realSrc;
-        
-        item.addEventListener('canplaythrough', function() {
-          this.play().catch(e => console.log('Autoplay prevented:', e));
-        }, { once: true });
-        
-        item.load();
+      document.getElementById('project-title').textContent = project.title.toUpperCase();
 
-        if (!EDIT_MODE) return;
+      const embedEl = document.getElementById('project-embed');
+      embedEl.innerHTML = '';
+      if (project.embedUrl) {
+        const iframe = document.createElement('iframe');
+        iframe.src = project.embedUrl;
+        iframe.setAttribute('allowfullscreen', '');
+        embedEl.appendChild(iframe);
+      } else if (project.videoSrc) {
+        const vid = document.createElement('video');
+        vid.src = project.videoSrc;
+        vid.controls = true;
+        vid.style.cssText = 'width:100%;height:100%;';
+        embedEl.appendChild(vid);
+      }
 
-        // Drag functionality for edit mode
-        item.addEventListener('mousedown', e => {
-          activeItem = item;
-          offset = [item.offsetLeft - e.clientX, item.offsetTop - e.clientY];
-          item.style.zIndex = 999;
+      const bodyEl = document.getElementById('project-body');
+      bodyEl.innerHTML = project.description;
+      if (project.photos && project.photos.length) {
+        const grid = document.createElement('div');
+        grid.className = 'project-photos';
+        project.photos.forEach(src => {
+          const img = document.createElement('img');
+          img.src = src; img.alt = '';
+          grid.appendChild(img);
         });
-      });
+        bodyEl.appendChild(grid);
+      }
 
-      document.addEventListener('mouseup', () => {
-        activeItem = null;
-      });
+      document.getElementById('project-back-btn').onclick = () => showCategory(project.category);
 
-      document.addEventListener('mousemove', e => {
-        if (!activeItem) return;
-        activeItem.style.left = (e.clientX + offset[0]) + 'px';
-        activeItem.style.top = (e.clientY + offset[1]) + 'px';
-      });
+      clearActive();
+      document.getElementById('project-page').classList.add('active');
+      scrollToTop();
     }
 
-    initCollage();
-
-    // Landing page - smooth fade on click
-    const landing = document.getElementById('landing');
-    landing.addEventListener('click', () => {
-      landing.classList.add('fading');
-      // Wait for fade animation to complete before hiding
-      setTimeout(() => {
-        landing.classList.add('hidden');
-      }, 1200);
-    });
-
-    // Convert vertical wheel to horizontal scroll on all pages (desktop only)
-    const contentDiv = document.querySelector('.content');
-    const iframeWrappers = document.querySelectorAll('.iframe-wrapper');
-    
-    // Add click handlers to activate iframes on desktop
-    iframeWrappers.forEach(wrapper => {
-      wrapper.addEventListener('click', function(e) {
-        if (window.innerWidth > 768 && !this.classList.contains('active')) {
-          this.classList.add('active');
-          e.stopPropagation();
-        }
-      });
-
-      // Add scroll handler to each wrapper to ensure scroll works even over active iframes
-      if (window.innerWidth > 768) {
-        wrapper.addEventListener('wheel', handleWheel, { passive: false });
-      }
-    });
-
-    // Only enable horizontal scroll on desktop (not mobile)
-    function enableHorizontalScroll() {
-      if (window.innerWidth > 768) {
-        contentDiv.addEventListener('wheel', handleWheel, { passive: false });
+    function scrollToTop() {
+      if (isMobile()) {
+        window.scrollTo(0, 0);
       } else {
-        contentDiv.removeEventListener('wheel', handleWheel);
-        iframeWrappers.forEach(wrapper => {
-          wrapper.removeEventListener('wheel', handleWheel);
-        });
+        const pp = document.getElementById('project-page');
+        const ab = document.getElementById('about');
+        pp.scrollTop = 0;
+        ab.scrollTop = 0;
       }
     }
 
-    function handleWheel(e) {
+    // ── Project row interactions ──────────────────────────────────────────────
+    document.querySelectorAll('.project-row').forEach(row => {
+
+      // Click → open project
+      row.addEventListener('click', () => {
+        openProject(row.dataset.projectId);
+      });
+
+      // Hover: play all clips in this row
+      row.addEventListener('mouseenter', () => {
+        row.querySelectorAll('video').forEach(loadAndPlay);
+      });
+
+      // Leave: pause (but keep loaded)
+      row.addEventListener('mouseleave', () => {
+        row.querySelectorAll('video').forEach(pauseAndDim);
+      });
+
+      // Touch: treat tap as play/click on mobile
+      row.addEventListener('touchstart', () => {
+        row.querySelectorAll('video').forEach(loadAndPlay);
+      }, { passive: true });
+    });
+
+    // ── Wheel → horizontal scroll on each row strip (desktop only) ────────────
+    function handleRowWheel(e, strip) {
       e.preventDefault();
       e.stopPropagation();
-      contentDiv.scrollLeft += e.deltaY;
+      strip.scrollLeft += e.deltaY;
     }
 
-    enableHorizontalScroll();
-    window.addEventListener('resize', enableHorizontalScroll);
+    function rebindScrollHandlers() {
+      document.querySelectorAll('.project-row-scroll').forEach(strip => {
+        const newStrip = strip.cloneNode(false);
+        while (strip.firstChild) newStrip.appendChild(strip.firstChild);
+        strip.replaceWith(newStrip);
 
+        if (!isMobile()) {
+          newStrip.addEventListener('wheel', (e) => handleRowWheel(e, newStrip), { passive: false });
+        }
+      });
+    }
+
+    window.addEventListener('resize', rebindScrollHandlers);
+
+    // ── Landing ───────────────────────────────────────────────────────────────
+    document.getElementById('landing').addEventListener('click', function() {
+      this.classList.add('fading');
+      setTimeout(() => this.classList.add('hidden'), 1200);
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    document.querySelector('.menu button').classList.add('active');
+    rebindScrollHandlers();
   </script>
 </body>
 </html>
