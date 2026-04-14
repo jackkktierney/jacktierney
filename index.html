@@ -192,25 +192,43 @@
       gap: 5px;
     }
 
-    /* Videos — fixed height so all rows are identical size */
-    .project-row-scroll-inner video {
-      height: 220px;
-      width: auto;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      display: block;
-      flex-shrink: 0;
-      background: #b8b8b8;
-      transition: opacity 0.2s;
-      cursor: pointer;
-      user-select: none;
+    /* Clip wrapper — shows img by default, video on row hover */
+    .clip {
       position: relative;
-      z-index: 10;
+      height: 220px;
+      aspect-ratio: 16 / 9;
+      flex-shrink: 0;
+      cursor: pointer;
+      overflow: hidden;
+      background: #b8b8b8;
     }
 
-    /* Paused = dim; hovered row = full brightness */
-    .project-row-scroll-inner video.paused-dim { opacity: 0.65; }
-    .project-row:hover .project-row-scroll-inner video { opacity: 1 !important; }
+    .clip img,
+    .clip video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Image always visible, video hidden on top */
+    .clip img {
+      opacity: 0.65;
+      transition: opacity 0.2s;
+      z-index: 1;
+    }
+
+    .clip video {
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 2;
+    }
+
+    /* On row hover: fade img out, fade video in */
+    .project-row:hover .clip img { opacity: 0; }
+    .project-row:hover .clip video { opacity: 1; }
 
     /* ── PROJECT PAGE ── */
     #project-page {
@@ -444,11 +462,11 @@
         <div class="project-row-label">Zephyr</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="personal/project-1/clip-1.mp4" poster="personal/project-1/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-1/clip-2.mp4" poster="personal/project-1/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-1/clip-3.mp4" poster="personal/project-1/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-1/clip-4.mp4" poster="personal/project-1/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-1/clip-5.mp4" poster="personal/project-1/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="personal/project-1/thumb-1.jpg" alt=""><video src="personal/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-2.jpg" alt=""><video src="personal/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-3.jpg" alt=""><video src="personal/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-4.jpg" alt=""><video src="personal/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-5.jpg" alt=""><video src="personal/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -457,11 +475,11 @@
         <div class="project-row-label">Baye Fall</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="personal/project-2/clip-1.mp4" poster="personal/project-2/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-2/clip-2.mp4" poster="personal/project-2/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-2/clip-3.mp4" poster="personal/project-2/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-2/clip-4.mp4" poster="personal/project-2/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-2/clip-5.mp4" poster="personal/project-2/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="personal/project-2/thumb-1.jpg" alt=""><video src="personal/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-2.jpg" alt=""><video src="personal/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-3.jpg" alt=""><video src="personal/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-4.jpg" alt=""><video src="personal/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-5.jpg" alt=""><video src="personal/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -470,11 +488,11 @@
         <div class="project-row-label">Experimentation</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="personal/project-3/clip-1.mp4" poster="personal/project-3/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-3/clip-2.mp4" poster="personal/project-3/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-3/clip-3.mp4" poster="personal/project-3/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-3/clip-4.mp4" poster="personal/project-3/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="personal/project-3/clip-5.mp4" poster="personal/project-3/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="personal/project-3/thumb-1.jpg" alt=""><video src="personal/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-2.jpg" alt=""><video src="personal/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-3.jpg" alt=""><video src="personal/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-4.jpg" alt=""><video src="personal/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-5.jpg" alt=""><video src="personal/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -488,11 +506,11 @@
         <div class="project-row-label">Childish</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="commercial/project-1/clip-1.mp4" poster="commercial/project-1/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-1/clip-2.mp4" poster="commercial/project-1/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-1/clip-3.mp4" poster="commercial/project-1/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-1/clip-4.mp4" poster="commercial/project-1/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-1/clip-5.mp4" poster="commercial/project-1/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="commercial/project-1/thumb-1.jpg" alt=""><video src="commercial/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-2.jpg" alt=""><video src="commercial/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-3.jpg" alt=""><video src="commercial/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-4.jpg" alt=""><video src="commercial/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-5.jpg" alt=""><video src="commercial/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -501,11 +519,11 @@
         <div class="project-row-label">Chase and Status</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="commercial/project-2/clip-1.mp4" poster="commercial/project-2/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-2/clip-2.mp4" poster="commercial/project-2/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-2/clip-3.mp4" poster="commercial/project-2/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-2/clip-4.mp4" poster="commercial/project-2/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-2/clip-5.mp4" poster="commercial/project-2/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="commercial/project-2/thumb-1.jpg" alt=""><video src="commercial/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-2.jpg" alt=""><video src="commercial/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-3.jpg" alt=""><video src="commercial/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-4.jpg" alt=""><video src="commercial/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-5.jpg" alt=""><video src="commercial/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -514,11 +532,11 @@
         <div class="project-row-label">Jaded</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="commercial/project-3/clip-1.mp4" poster="commercial/project-3/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-3/clip-2.mp4" poster="commercial/project-3/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-3/clip-3.mp4" poster="commercial/project-3/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-3/clip-4.mp4" poster="commercial/project-3/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="commercial/project-3/clip-5.mp4" poster="commercial/project-3/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="commercial/project-3/thumb-1.jpg" alt=""><video src="commercial/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-2.jpg" alt=""><video src="commercial/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-3.jpg" alt=""><video src="commercial/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-4.jpg" alt=""><video src="commercial/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-5.jpg" alt=""><video src="commercial/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -532,11 +550,11 @@
         <div class="project-row-label">Nike</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="skating/project-1/clip-1.mp4" poster="skating/project-1/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-1/clip-2.mp4" poster="skating/project-1/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-1/clip-3.mp4" poster="skating/project-1/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-1/clip-4.mp4" poster="skating/project-1/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-1/clip-5.mp4" poster="skating/project-1/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="skating/project-1/thumb-1.jpg" alt=""><video src="skating/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-2.jpg" alt=""><video src="skating/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-3.jpg" alt=""><video src="skating/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-4.jpg" alt=""><video src="skating/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-5.jpg" alt=""><video src="skating/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -545,11 +563,11 @@
         <div class="project-row-label">AIM</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="skating/project-2/clip-1.mp4" poster="skating/project-2/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-2/clip-2.mp4" poster="skating/project-2/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-2/clip-3.mp4" poster="skating/project-2/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-2/clip-4.mp4" poster="skating/project-2/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-2/clip-5.mp4" poster="skating/project-2/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="skating/project-2/thumb-1.jpg" alt=""><video src="skating/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-2.jpg" alt=""><video src="skating/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-3.jpg" alt=""><video src="skating/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-4.jpg" alt=""><video src="skating/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-5.jpg" alt=""><video src="skating/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -558,11 +576,11 @@
         <div class="project-row-label">Zephyr</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <video src="skating/project-3/clip-1.mp4" poster="skating/project-3/thumb-1.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-3/clip-2.mp4" poster="skating/project-3/thumb-2.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-3/clip-3.mp4" poster="skating/project-3/thumb-3.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-3/clip-4.mp4" poster="skating/project-3/thumb-4.jpg" muted loop playsinline preload="metadata"></video>
-            <video src="skating/project-3/clip-5.mp4" poster="skating/project-3/thumb-5.jpg" muted loop playsinline preload="metadata"></video>
+            <div class="clip"><img src="skating/project-3/thumb-1.jpg" alt=""><video src="skating/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-2.jpg" alt=""><video src="skating/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-3.jpg" alt=""><video src="skating/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-4.jpg" alt=""><video src="skating/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-5.jpg" alt=""><video src="skating/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
           </div>
         </div>
       </div>
@@ -610,13 +628,11 @@
     }
 
     function loadAndPlay(v) {
-      v.classList.remove('paused-dim');
       v.play().catch(() => {});
     }
 
-    function pauseAndDim(v) {
+    function pauseVid(v) {
       v.pause();
-      v.classList.add('paused-dim');
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -694,31 +710,25 @@
     // ── Project row interactions ──────────────────────────────────────────────
     document.querySelectorAll('.project-row').forEach(row => {
 
-      // Click → open project
       row.addEventListener('click', () => {
         openProject(row.dataset.projectId);
       });
 
-      // Hover: play all clips in this row
       row.addEventListener('mouseenter', () => {
-        row.querySelectorAll('video').forEach(loadAndPlay);
+        row.querySelectorAll('.clip video').forEach(loadAndPlay);
       });
 
-      // Leave: pause and dim
       row.addEventListener('mouseleave', () => {
-        row.querySelectorAll('video').forEach(pauseAndDim);
+        row.querySelectorAll('.clip video').forEach(pauseVid);
       });
 
-      // Touch: play on tap
       row.addEventListener('touchstart', () => {
-        row.querySelectorAll('video').forEach(loadAndPlay);
+        row.querySelectorAll('.clip video').forEach(loadAndPlay);
       }, { passive: true });
     });
 
-    // Apply initial dim to all videos immediately
-    document.querySelectorAll('.project-row-scroll-inner video').forEach(v => {
-      v.classList.add('paused-dim');
-    });
+    // Preload all videos while landing is showing
+    document.querySelectorAll('.clip video').forEach(v => v.load());
 
     // ── Wheel → horizontal scroll on each row strip (desktop only) ────────────
     function handleRowWheel(e, strip) {
@@ -745,11 +755,6 @@
     document.getElementById('landing').addEventListener('click', function() {
       this.classList.add('fading');
       setTimeout(() => this.classList.add('hidden'), 1200);
-    });
-
-    // Preload all videos while landing screen is showing
-    document.querySelectorAll('.project-row-scroll-inner video').forEach(v => {
-      v.load();
     });
 
     // ── Init ──────────────────────────────────────────────────────────────────
