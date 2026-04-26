@@ -31,23 +31,25 @@
     .grain {
       pointer-events: none;
       position: fixed;
-      inset: -200px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.25;
+      opacity: 0.12;
       animation: grainMove 0.8s steps(10) infinite;
-      z-index: 1;
-      mix-blend-mode: overlay;
+      z-index: 9999;
     }
 
     #landing .grain-landing {
       pointer-events: none;
       position: fixed;
-      inset: -200px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.5;
+      opacity: 0.18;
       animation: grainMove 0.8s steps(10) infinite;
       z-index: 1;
-      mix-blend-mode: overlay;
     }
 
     /* ── ANIMATIONS ── */
@@ -60,10 +62,10 @@
     }
     @keyframes grainMove {
       0%   { transform: translate(0,0); }
-      20%  { transform: translate(-50px,30px); }
-      40%  { transform: translate(40px,-30px); }
-      60%  { transform: translate(-30px,20px); }
-      80%  { transform: translate(20px,-40px); }
+      20%  { transform: translate(-15px,10px); }
+      40%  { transform: translate(12px,-10px); }
+      60%  { transform: translate(-10px,8px); }
+      80%  { transform: translate(8px,-12px); }
       100% { transform: translate(0,0); }
     }
     @keyframes flickerIn {
@@ -224,10 +226,15 @@
       opacity: 0;
       transition: opacity 0.25s;
       z-index: 2;
+      visibility: hidden;
     }
 
     .project-row:hover .clip img  { opacity: 0; }
-    .project-row:hover .clip video { opacity: 1; }
+    .project-row:hover .clip video { opacity: 1; visibility: visible; }
+
+    /* Home row — hover just brings thumbnail to full brightness, no video */
+    .project-row[data-no-video]:hover .clip img  { opacity: 1; }
+    .project-row[data-no-video]:hover .clip video { opacity: 0; visibility: hidden; }
 
     /* ── PROJECT PAGE ── */
     #project-page {
@@ -496,11 +503,11 @@
         <div class="project-row-label">Zephyr</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-1/thumb-1.jpg" alt=""><video src="personal/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-2.jpg" alt=""><video src="personal/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-3.jpg" alt=""><video src="personal/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-4.jpg" alt=""><video src="personal/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-5.jpg" alt=""><video src="personal/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-1.jpg" alt=""><video src="personal/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-2.jpg" alt=""><video src="personal/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-3.jpg" alt=""><video src="personal/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-4.jpg" alt=""><video src="personal/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-1/thumb-5.jpg" alt=""><video src="personal/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -509,24 +516,24 @@
         <div class="project-row-label">Baye Fall</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-2/thumb-1.jpg" alt=""><video src="personal/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-2.jpg" alt=""><video src="personal/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-3.jpg" alt=""><video src="personal/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-4.jpg" alt=""><video src="personal/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-5.jpg" alt=""><video src="personal/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-1.jpg" alt=""><video src="personal/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-2.jpg" alt=""><video src="personal/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-3.jpg" alt=""><video src="personal/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-4.jpg" alt=""><video src="personal/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-2/thumb-5.jpg" alt=""><video src="personal/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
 
-      <div class="project-row" data-project-id="personal-project-3">
+      <div class="project-row" data-project-id="personal-project-3" data-no-video>
         <div class="project-row-label">Home</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-3/thumb-1.jpg" alt=""><video src="personal/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-2.jpg" alt=""><video src="personal/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-3.jpg" alt=""><video src="personal/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-4.jpg" alt=""><video src="personal/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-5.jpg" alt=""><video src="personal/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-1.jpg" alt=""><video src="personal/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-2.jpg" alt=""><video src="personal/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-3.jpg" alt=""><video src="personal/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-4.jpg" alt=""><video src="personal/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="personal/project-3/thumb-5.jpg" alt=""><video src="personal/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -540,11 +547,11 @@
         <div class="project-row-label">Childish</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-1/thumb-1.jpg" alt=""><video src="commercial/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-2.jpg" alt=""><video src="commercial/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-3.jpg" alt=""><video src="commercial/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-4.jpg" alt=""><video src="commercial/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-5.jpg" alt=""><video src="commercial/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-1.jpg" alt=""><video src="commercial/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-2.jpg" alt=""><video src="commercial/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-3.jpg" alt=""><video src="commercial/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-4.jpg" alt=""><video src="commercial/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-1/thumb-5.jpg" alt=""><video src="commercial/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -553,11 +560,11 @@
         <div class="project-row-label">Chase and Status</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-2/thumb-1.jpg" alt=""><video src="commercial/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-2.jpg" alt=""><video src="commercial/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-3.jpg" alt=""><video src="commercial/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-4.jpg" alt=""><video src="commercial/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-5.jpg" alt=""><video src="commercial/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-1.jpg" alt=""><video src="commercial/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-2.jpg" alt=""><video src="commercial/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-3.jpg" alt=""><video src="commercial/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-4.jpg" alt=""><video src="commercial/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-2/thumb-5.jpg" alt=""><video src="commercial/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -566,11 +573,11 @@
         <div class="project-row-label">Jaded</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-3/thumb-1.jpg" alt=""><video src="commercial/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-2.jpg" alt=""><video src="commercial/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-3.jpg" alt=""><video src="commercial/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-4.jpg" alt=""><video src="commercial/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-5.jpg" alt=""><video src="commercial/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-1.jpg" alt=""><video src="commercial/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-2.jpg" alt=""><video src="commercial/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-3.jpg" alt=""><video src="commercial/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-4.jpg" alt=""><video src="commercial/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="commercial/project-3/thumb-5.jpg" alt=""><video src="commercial/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -584,11 +591,11 @@
         <div class="project-row-label">Nike</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-1/thumb-1.jpg" alt=""><video src="skating/project-1/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-2.jpg" alt=""><video src="skating/project-1/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-3.jpg" alt=""><video src="skating/project-1/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-4.jpg" alt=""><video src="skating/project-1/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-5.jpg" alt=""><video src="skating/project-1/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-1.jpg" alt=""><video src="skating/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-2.jpg" alt=""><video src="skating/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-3.jpg" alt=""><video src="skating/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-4.jpg" alt=""><video src="skating/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-1/thumb-5.jpg" alt=""><video src="skating/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -598,11 +605,11 @@
         <div class="project-row-label">Zephyr</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-2/thumb-1.jpg" alt=""><video src="skating/project-2/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-2.jpg" alt=""><video src="skating/project-2/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-3.jpg" alt=""><video src="skating/project-2/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-4.jpg" alt=""><video src="skating/project-2/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-5.jpg" alt=""><video src="skating/project-2/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-1.jpg" alt=""><video src="skating/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-2.jpg" alt=""><video src="skating/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-3.jpg" alt=""><video src="skating/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-4.jpg" alt=""><video src="skating/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-2/thumb-5.jpg" alt=""><video src="skating/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -612,11 +619,11 @@
         <div class="project-row-label">AIM</div>
         <div class="project-row-scroll">
           <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-3/thumb-1.jpg" alt=""><video src="skating/project-3/clip-1.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-2.jpg" alt=""><video src="skating/project-3/clip-2.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-3.jpg" alt=""><video src="skating/project-3/clip-3.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-4.jpg" alt=""><video src="skating/project-3/clip-4.mp4" muted loop playsinline preload="metadata"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-5.jpg" alt=""><video src="skating/project-3/clip-5.mp4" muted loop playsinline preload="metadata"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-1.jpg" alt=""><video src="skating/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-2.jpg" alt=""><video src="skating/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-3.jpg" alt=""><video src="skating/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-4.jpg" alt=""><video src="skating/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
+            <div class="clip"><img src="skating/project-3/thumb-5.jpg" alt=""><video src="skating/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -878,19 +885,27 @@
       row.addEventListener('click', () => openProject(row.dataset.projectId));
 
       row.addEventListener('mouseenter', () => {
-        row.querySelectorAll('.clip video').forEach(v => v.play().catch(() => {}));
+        if (row.dataset.noVideo !== undefined) return;
+        row.querySelectorAll('.clip video').forEach(v => {
+          if (!v.src && v.dataset.src) v.src = v.dataset.src;
+          if (v.readyState === 0) v.load();
+          v.play().catch(() => {});
+        });
       });
 
       row.addEventListener('mouseleave', () => {
+        if (row.dataset.noVideo !== undefined) return;
         row.querySelectorAll('.clip video').forEach(v => v.pause());
       });
 
       row.addEventListener('touchstart', () => {
-        row.querySelectorAll('.clip video').forEach(v => v.play().catch(() => {}));
+        if (row.dataset.noVideo !== undefined) return;
+        row.querySelectorAll('.clip video').forEach(v => {
+          if (v.readyState === 0) v.load();
+          v.play().catch(() => {});
+        });
       }, { passive: true });
     });
-
-    document.querySelectorAll('.clip video').forEach(v => v.load());
 
     // ── WHEEL → HORIZONTAL SCROLL ─────────────────────────────────────────────
     function bindWheelHandlers() {
