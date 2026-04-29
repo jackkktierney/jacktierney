@@ -1,935 +1,234 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JACK TIERNEY</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-
-  <!-- Instagram embed script -->
-  <script async src="//www.instagram.com/embed.js"></script>
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      display: flex;
-      font-family: 'VT323', monospace;
-      background: #d2d2d2;
-      color: #111;
-    }
-
-    /* ── GRAIN ── */
-    .grain {
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.12;
-      animation: grainMove 0.8s steps(10) infinite;
-      z-index: 9999;
-    }
-
-    #landing .grain-landing {
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.18;
-      animation: grainMove 0.8s steps(10) infinite;
-      z-index: 1;
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes jitter {
-      0%   { transform: translate(0,0); }
-      25%  { transform: translate(-1px,1px); }
-      50%  { transform: translate(1px,-1px); }
-      75%  { transform: translate(-1px,0); }
-      100% { transform: translate(0,0); }
-    }
-    @keyframes grainMove {
-      0%   { transform: translate(0,0); }
-      20%  { transform: translate(-15px,10px); }
-      40%  { transform: translate(12px,-10px); }
-      60%  { transform: translate(-10px,8px); }
-      80%  { transform: translate(8px,-12px); }
-      100% { transform: translate(0,0); }
-    }
-    @keyframes flickerIn {
-      0%   { opacity: 0; }
-      70%  { opacity: 0.9; }
-      75%  { opacity: 0.7; }
-      80%  { opacity: 1; }
-      85%  { opacity: 0.85; }
-      90%  { opacity: 1; }
-      100% { opacity: 1; }
-    }
-    @keyframes rf1 { 0%{opacity:1}50%{opacity:.75}100%{opacity:1} }
-    @keyframes rf2 { 0%{opacity:1}30%{opacity:.8}60%{opacity:.7}100%{opacity:1} }
-    @keyframes rf3 { 0%{opacity:1}50%{opacity:.85}100%{opacity:1} }
-
-    /* ── SIDEBAR ── */
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 28px 20px 28px 20px;
-      z-index: 2;
-      height: 100vh;
-    }
-
-    .brand {
-      font-size: 38px;
-      letter-spacing: 4px;
-      line-height: 1.05;
-      cursor: pointer;
-      transition: opacity .12s;
-      user-select: none;
-    }
-    .brand:hover { opacity: .6; animation: jitter 1s steps(2) 1; }
-    .brand.active { text-decoration: underline; }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .menu button {
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 22px;
-      text-align: left;
-      cursor: pointer;
-      color: #111;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      font-family: 'VT323', monospace;
-      transition: opacity .12s;
-    }
-    .menu button:hover { opacity: .6; animation: jitter 1s steps(2) 1; }
-    .menu button.active { text-decoration: underline; }
-
-    .sidebar-footer {
-      font-size: 18px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #111;
-      text-decoration: none;
-      cursor: pointer;
-      transition: opacity .12s;
-      font-family: 'VT323', monospace;
-    }
-    .sidebar-footer:hover { opacity: .6; }
-
-    /* ── CONTENT ── */
-    .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-      z-index: 2;
-      min-width: 0;
-    }
-
-    /* ── PAGES ── */
-    .page { display: none; width: 100%; height: 100%; }
-    .page.active { display: flex; flex-direction: column; }
-
-    /* ── CATEGORY PAGE ── */
-    .category-page {
-      padding: 4vh 40px 4vh 0;
-      justify-content: space-between;
-    }
-
-    .project-row {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      cursor: pointer;
-      min-height: 0;
-      padding: 4px 0;
-    }
-
-    .project-row-label {
-      font-size: 15px;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      opacity: 0.45;
-      margin-bottom: 8px;
-      flex-shrink: 0;
-    }
-
-    /* Horizontal scroll strip */
-    .project-row-scroll {
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      flex: 1;
-      min-height: 0;
-    }
-    .project-row-scroll::-webkit-scrollbar { display: none; }
-
-    .project-row-scroll-inner {
-      display: inline-flex;
-      align-items: center;
-      height: 100%;
-      gap: 6px;
-    }
-
-    /* ── CLIP ── */
-    .clip {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      flex-shrink: 0;
-      cursor: pointer;
-      overflow: hidden;
-      background: #b8b8b8;
-    }
-
-    .clip img,
-    .clip video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .clip img {
-      opacity: 0.65;
-      transition: opacity 0.25s;
-      z-index: 1;
-    }
-
-    .clip video {
-      opacity: 0;
-      transition: opacity 0.25s;
-      z-index: 2;
-      visibility: hidden;
-    }
-
-    .project-row:hover .clip img  { opacity: 0; }
-    .project-row:hover .clip video { opacity: 1; visibility: visible; }
-
-    /* Home row — hover just brings thumbnail to full brightness, no video */
-    .project-row[data-no-video]:hover .clip img  { opacity: 1; }
-    .project-row[data-no-video]:hover .clip video { opacity: 0; visibility: hidden; }
-
-    /* ── PROJECT PAGE ── */
-    #project-page {
-      overflow-y: auto;
-      padding: 32px 60px 80px 0;
-      scrollbar-width: none;
-    }
-    #project-page::-webkit-scrollbar { display: none; }
-
-    /* Stop vertical page scroll from firing when mouse is over the multi-embed strip */
-    .multi-embed-scroll {
-      overscroll-behavior-x: contain;
-    }
-
-    .project-back {
-      font-size: 17px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      cursor: pointer;
-      opacity: 0.45;
-      display: inline-block;
-      margin-bottom: 24px;
-    }
-    .project-back:hover { opacity: 1; }
-
-    .project-title {
-      font-size: 60px;
-      letter-spacing: 8px;
-      text-transform: uppercase;
-      margin-bottom: 36px;
-      line-height: 1;
-    }
-
-    /* Single embed */
-    .project-embed-wrapper {
-      width: 100%;
-      max-width: 900px;
-      aspect-ratio: 16/9;
-      margin-bottom: 44px;
-      background: #b8b8b8;
-      position: relative;
-      z-index: 10;
-    }
-    .project-embed-wrapper iframe,
-    .project-embed-wrapper video {
-      width: 100%; height: 100%;
-      border: none; display: block;
-    }
-
-    /* Vimeo responsive wrapper (padding-top trick) */
-    .vimeo-wrapper {
-      max-width: 900px;
-      margin-bottom: 44px;
-      position: relative;
-      padding-top: 56.25%;
-      background: #b8b8b8;
-    }
-    .vimeo-wrapper iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border: none;
-    }
-
-    /* Multi-video scroll row (Chase & Status) */
-    .multi-embed-scroll {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      margin-bottom: 44px;
-      padding-bottom: 8px;
-    }
-    .multi-embed-scroll::-webkit-scrollbar { display: none; }
-    .multi-embed-scroll .embed-item {
-      flex-shrink: 0;
-      width: 640px;
-      aspect-ratio: 16/9;
-      background: #b8b8b8;
-      position: relative;
-    }
-    .multi-embed-scroll .embed-item iframe {
-      width: 100%; height: 100%;
-      border: none; display: block;
-    }
-
-    /* Instagram embed wrapper */
-    .instagram-wrapper {
-      max-width: 540px;
-      margin-bottom: 44px;
-    }
-
-    .project-body { max-width: 680px; }
-    .project-body p {
-      font-size: 21px;
-      line-height: 1.6;
-      letter-spacing: 1px;
-      margin-bottom: 22px;
-    }
-    .project-body a { color: #111; }
-    .project-body a:hover { opacity: .6; }
-
-    /* Photo grid — up to 10 photos, 5 per row */
-    .project-photos {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 36px;
-      max-width: 900px;
-    }
-    .project-photos img {
-      width: calc(20% - 8px);
-      aspect-ratio: 4/3;
-      object-fit: cover;
-    }
-
-    /* ── ABOUT PAGE ── */
-    #about {
-      overflow-y: auto;
-      padding: 32px 60px 80px 0;
-      scrollbar-width: none;
-    }
-    #about::-webkit-scrollbar { display: none; }
-    #about p {
-      font-size: 22px;
-      line-height: 1.6;
-      letter-spacing: 1px;
-      max-width: 700px;
-      margin-bottom: 22px;
-    }
-    #about a { color: #111; }
-    #about a:hover { opacity: .6; }
-
-    /* ── LANDING ── */
-    #landing {
-      position: fixed;
-      inset: 0;
-      background: #d2d2d2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      cursor: pointer;
-      transition: opacity 1.2s ease;
-    }
-    #landing.fading { opacity: 0; }
-    #landing.hidden { display: none; }
-
-    #landing-text {
-      font-size: 100px;
-      letter-spacing: 14px;
-      text-align: center;
-      line-height: 1;
-      opacity: 0;
-      animation:
-        flickerIn 1s ease-in forwards,
-        jitter 1.8s steps(3) infinite 1s,
-        rf1 0.15s ease-in-out 3.2s,
-        rf2 0.2s  ease-in-out 6.8s,
-        rf3 0.12s ease-in-out 11.5s,
-        rf1 0.14s ease-in-out 11.75s,
-        rf2 0.18s ease-in-out 15.3s,
-        rf3 0.16s ease-in-out 20.1s;
-    }
-
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      html, body { overflow: auto; height: auto; }
-      body { flex-direction: column; }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: column;
-        padding: 16px 16px 12px;
-        position: sticky;
-        top: 0;
-        background: #d2d2d2;
-        z-index: 100;
-        gap: 10px;
-        justify-content: flex-start;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Showcase</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f2f2f2;
       }
-
-      .sidebar-footer { display: none; }
-      .brand { font-size: 30px; letter-spacing: 3px; }
-
       .menu {
-        flex-direction: row;
+        width: 100%;
+        height: 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .menu button {
+        border: none;
+        background-color: transparent;
+        outline: none;
+        cursor: pointer;
+        padding: 12px 16px;
+      }
+      .menu button i {
+        font-size: 30px;
+        margin-right: 10px;
+      }
+      .menu ul {
+        list-style: none;
+        display: flex;
         flex-wrap: wrap;
-        gap: 10px 20px;
+        justify-content: space-between;
+        padding: 12px 0;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
       }
-      .menu button { font-size: 17px; letter-spacing: 2px; }
-
-      .content { height: auto; overflow: visible; flex-direction: column; }
-      .page { height: auto; flex-direction: column; }
-      .page.active { display: flex; }
-
-      .category-page {
-        padding: 16px 16px 40px 16px;
-        gap: 24px;
-        justify-content: flex-start;
+      .menu ul li {
+        margin: 0 10px;
       }
-
-      .project-row { flex: none; padding: 0; justify-content: flex-start; }
-      .project-row-label { margin-bottom: 8px; font-size: 14px; }
-
-      .project-row-scroll {
-        flex: none;
-        height: 28vw;
-        min-height: 110px;
+      .menu ul li a {
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+        color: #555;
+        text-decoration: none;
+        font-size: 16px;
+        transition: all 0.3s ease;
       }
-
-      .clip { height: 100% !important; }
-
-      #project-page, #about {
-        padding: 24px 16px 60px;
-        overflow-y: visible;
+      .menu ul li a i {
+        margin-left: 12px;
       }
-
-      .project-title { font-size: 38px; letter-spacing: 4px; }
-      .project-photos img { width: calc(50% - 5px); }
-      #landing-text { font-size: 60px; letter-spacing: 8px; }
-
-      .multi-embed-scroll .embed-item { width: 85vw; }
-    }
-
-    /* ── TABLET ── */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .sidebar { width: 180px; }
-      .brand { font-size: 32px; }
-      .menu button { font-size: 19px; }
-      .category-page { padding-right: 24px; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Landing -->
-  <div id="landing">
-    <div class="grain-landing"></div>
-    <div id="landing-text">JACK<br>TIERNEY</div>
-  </div>
-
-  <div class="grain"></div>
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="brand" id="brand-btn" onclick="showAbout()">JACK<br>TIERNEY</div>
+      .menu.active {
+        background-color: #555;
+        box-shadow: none;
+      }
+      .menu.active a {
+        color: white;
+        padding: 12px 30px;
+      }
+    </style>
+  </head>
+  <body>
     <div class="menu">
-      <button onclick="showCategory('personal', this)">PERSONAL</button>
-      <button onclick="showCategory('commercial', this)">COMMERCIAL</button>
-      <button onclick="showCategory('skating', this)">SKATING</button>
+      <button type="button" i>
+        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+          <g fill="currentColor">
+            <path d="M49,15L26,20A5,5 0 0,0 15,25H0C5.88,25 1,27.48 1,30V50C1,52.5 1.5,55
+2,55C2.5,55 3,54.5 3,54V59C3,61.55 3.5,64 4,65H49A20,20 0 0,1 69,45L49,15ZM8,56A3,3 0 0,1
+5,53V59C5,61.55 5.5,64 6,65H49A20,20 0 0,1 80,45L60,54C57.11,55.01 55,56.63
+55,58V59C55,60.03 55.01,61.55 55.02,62H59A20,20 0 0,1 79,49V58L79,54Z" />
+          </g>
+        </svg>
+      </button>
+      <div class="menu-panels">
+        <div class="menu-panel">
+          <h2>Navigation</h2>
+          <ul class="categories">
+            <li><a href="#category1">Category 1</a></li>
+            <li><a href="#category2">Category 2</a></li>
+            <li><a href="#category3">Category 3</a></li>
+          </ul>
+        </div>
+        <div class="menu-panel">
+          <h2>Project Showcase</h2>
+          <ul class="projects">
+            <li><a href="#project1">Project 1</a></li>
+            <li><a href="#project2">Project 2</a></li>
+            <li><a href="#project3">Project 3</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <a class="sidebar-footer" href="https://www.instagram.com/jackktierney/" target="_blank" rel="noopener">INSTAGRAM</a>
-  </div>
+    <script>
+      const menuBtn = document.querySelector(".menu button");
+      const activeClass = "active";
+      let activePanel;
 
-  <!-- Content -->
-  <div class="content">
+      function toggleMenu() {
+        if (menuBtn.classList.contains(activeClass)) {
+          menuBtn.classList.remove(activeClass);
+        } else {
+          menuBtn.classList.add(activeClass);
+        }
 
-    <!-- ── PERSONAL ── -->
-    <div id="personal" class="page category-page active">
-
-      <div class="project-row" data-project-id="personal-project-1">
-        <div class="project-row-label">Zephyr</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-1/thumb-1.jpg" alt=""><video src="personal/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-2.jpg" alt=""><video src="personal/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-3.jpg" alt=""><video src="personal/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-4.jpg" alt=""><video src="personal/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-1/thumb-5.jpg" alt=""><video src="personal/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-row" data-project-id="personal-project-2">
-        <div class="project-row-label">Baye Fall</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-2/thumb-1.jpg" alt=""><video src="personal/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-2.jpg" alt=""><video src="personal/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-3.jpg" alt=""><video src="personal/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-4.jpg" alt=""><video src="personal/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-2/thumb-5.jpg" alt=""><video src="personal/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-row" data-project-id="personal-project-3" data-no-video>
-        <div class="project-row-label">Home</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="personal/project-3/thumb-1.jpg" alt=""><video src="personal/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-2.jpg" alt=""><video src="personal/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-3.jpg" alt=""><video src="personal/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-4.jpg" alt=""><video src="personal/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="personal/project-3/thumb-5.jpg" alt=""><video src="personal/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /personal -->
-
-    <!-- ── COMMERCIAL ── -->
-    <div id="commercial" class="page category-page">
-
-      <div class="project-row" data-project-id="commercial-project-1">
-        <div class="project-row-label">Childish</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-1/thumb-1.jpg" alt=""><video src="commercial/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-2.jpg" alt=""><video src="commercial/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-3.jpg" alt=""><video src="commercial/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-4.jpg" alt=""><video src="commercial/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-1/thumb-5.jpg" alt=""><video src="commercial/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-row" data-project-id="commercial-project-2">
-        <div class="project-row-label">Chase and Status</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-2/thumb-1.jpg" alt=""><video src="commercial/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-2.jpg" alt=""><video src="commercial/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-3.jpg" alt=""><video src="commercial/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-4.jpg" alt=""><video src="commercial/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-2/thumb-5.jpg" alt=""><video src="commercial/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="project-row" data-project-id="commercial-project-3">
-        <div class="project-row-label">Jaded</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="commercial/project-3/thumb-1.jpg" alt=""><video src="commercial/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-2.jpg" alt=""><video src="commercial/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-3.jpg" alt=""><video src="commercial/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-4.jpg" alt=""><video src="commercial/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="commercial/project-3/thumb-5.jpg" alt=""><video src="commercial/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /commercial -->
-
-    <!-- ── SKATING ── -->
-    <div id="skating" class="page category-page">
-
-      <div class="project-row" data-project-id="skating-project-1">
-        <div class="project-row-label">Nike</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-1/thumb-1.jpg" alt=""><video src="skating/project-1/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-2.jpg" alt=""><video src="skating/project-1/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-3.jpg" alt=""><video src="skating/project-1/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-4.jpg" alt=""><video src="skating/project-1/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-1/thumb-5.jpg" alt=""><video src="skating/project-1/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- AIM is project-2 in the folder but displayed as "Zephyr" (swapped per request) -->
-      <div class="project-row" data-project-id="skating-project-2">
-        <div class="project-row-label">Zephyr</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-2/thumb-1.jpg" alt=""><video src="skating/project-2/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-2.jpg" alt=""><video src="skating/project-2/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-3.jpg" alt=""><video src="skating/project-2/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-4.jpg" alt=""><video src="skating/project-2/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-2/thumb-5.jpg" alt=""><video src="skating/project-2/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Zephyr is project-3 in the folder but displayed as "AIM" (swapped per request) -->
-      <div class="project-row" data-project-id="skating-project-3">
-        <div class="project-row-label">AIM</div>
-        <div class="project-row-scroll">
-          <div class="project-row-scroll-inner">
-            <div class="clip"><img src="skating/project-3/thumb-1.jpg" alt=""><video src="skating/project-3/clip-1.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-2.jpg" alt=""><video src="skating/project-3/clip-2.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-3.jpg" alt=""><video src="skating/project-3/clip-3.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-4.jpg" alt=""><video src="skating/project-3/clip-4.mp4" muted loop playsinline preload="none"></video></div>
-            <div class="clip"><img src="skating/project-3/thumb-5.jpg" alt=""><video src="skating/project-3/clip-5.mp4" muted loop playsinline preload="none"></video></div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /skating -->
-
-    <!-- ── ABOUT ── -->
-    <div id="about" class="page">
-      <p>Filmmaker from Devon. In love with the woods, rivers and moorland.</p>
-    </div>
-
-    <!-- ── PROJECT PAGE ── -->
-    <div id="project-page" class="page">
-      <span class="project-back" id="project-back-btn">← BACK</span>
-      <div class="project-title" id="project-title"></div>
-      <div id="project-media"></div>
-      <div class="project-body" id="project-body"></div>
-    </div>
-
-  </div><!-- /.content -->
-
-  <script>
-    // ── PROJECT DATA ──────────────────────────────────────────────────────────
-    const PROJECTS = {
-
-      'personal-project-1': {
-        title: 'Zephyr',
-        category: 'personal',
-        media: { type: 'youtube', url: 'https://www.youtube.com/embed/54SxblKJLVg?si=J0uKyqLI4FLQsjYu' },
-        description: '<p>My first time directing and my favourite project so far, a short film in collaboration with Finnegan Tui for his album Zephyr.</p>',
-        photos: []
-      },
-
-      'personal-project-2': {
-        title: 'Baye Fall',
-        category: 'personal',
-        media: {
-          type: 'vimeo',
-          // Vimeo embed — uses the padding-top responsive wrapper
-          html: '<div class="vimeo-wrapper"><iframe src="https://player.vimeo.com/video/1082279741?h=1db9f8663b&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="BAYEFALL - the fisherfolk of senegal"></iframe></div>'
-        },
-        description: '<p>An early teaser of a project myself and Spike Adams are working on together.</p>',
-        photos: []
-      },
-
-      'personal-project-3': {
-        title: 'Home',
-        category: 'personal',
-        media: null,
-        description: '<p>Experimentations and explorations around home.</p>',
-        // Add up to 10 photo paths here, e.g. 'personal/project-3/photo-1.jpg'
-        photos: [
-          'personal/project-3/photo-1.jpg',
-          'personal/project-3/photo-2.jpg',
-          'personal/project-3/photo-3.jpg',
-          'personal/project-3/photo-4.jpg',
-          'personal/project-3/photo-5.jpg',
-          'personal/project-3/photo-6.jpg',
-          'personal/project-3/photo-7.jpg',
-          'personal/project-3/photo-8.jpg',
-          'personal/project-3/photo-9.jpg',
-          'personal/project-3/photo-10.jpg',
-        ]
-      },
-
-      'commercial-project-1': {
-        title: 'Childish',
-        category: 'commercial',
-        media: null,
-        description: '<p>A short film/advertisement for Childish directed by me.</p>',
-        photos: []
-      },
-
-      'commercial-project-2': {
-        title: 'Chase and Status',
-        category: 'commercial',
-        media: {
-          type: 'multi',
-          videos: [
-            'https://www.youtube.com/embed/y0Ob4Vz9Yh8?si=ublntgNApVQQQ9bz',
-            'https://www.youtube.com/embed/Xss8DEYN9sM?si=rps4I-UyhAo4E9wg',
-            'https://www.youtube.com/embed/5_XDTCkfAYs?si=sIz6r0UbhST7lRYQ',
-          ]
-        },
-        description: '<p>Directed by Spike Adams, Produced by myself under Murmur Collective.</p>',
-        photos: []
-      },
-
-      'commercial-project-3': {
-        title: 'Jaded',
-        category: 'commercial',
-        media: null,
-        description: '<p>Write about this project here.</p>',
-        photos: []
-      },
-
-      'skating-project-1': {
-        title: 'Nike',
-        category: 'skating',
-        media: {
-          type: 'vimeo',
-          html: '<div class="vimeo-wrapper"><iframe src="https://player.vimeo.com/video/801323911?h=f1856a9f12" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen></iframe></div>'
-        },
-        description: '<p>Skating Cam Op for this piece.</p>',
-        photos: []
-      },
-
-      // skating-project-2 folder = AIM clips, but title is now "Zephyr" (swapped)
-      'skating-project-2': {
-        title: 'Zephyr',
-        category: 'skating',
-        media: null,
-        description: '<p>These shots I filmed on skates, using an Alexa Mini.</p>',
-        photos: []
-      },
-
-      // skating-project-3 folder = Zephyr clips, but title is now "AIM" (swapped)
-      'skating-project-3': {
-        title: 'AIM',
-        category: 'skating',
-        media: {
-          type: 'instagram',
-          html: `<div class="instagram-wrapper"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DXXNpxPsjvJ/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:99.375%;"><div style="padding:16px;"><a href="https://www.instagram.com/reel/DXXNpxPsjvJ/?utm_source=ig_embed&utm_campaign=loading" style="background:#FFFFFF;line-height:0;padding:0;text-align:center;text-decoration:none;width:100%;" target="_blank"><div style="display:flex;flex-direction:row;align-items:center;"><div style="background-color:#F4F4F4;border-radius:50%;flex-grow:0;height:40px;margin-right:14px;width:40px;"></div><div style="display:flex;flex-direction:column;flex-grow:1;justify-content:center;"><div style="background-color:#F4F4F4;border-radius:4px;flex-grow:0;height:14px;margin-bottom:6px;width:100px;"></div><div style="background-color:#F4F4F4;border-radius:4px;flex-grow:0;height:14px;width:60px;"></div></div></div><div style="padding:19% 0;"></div><div style="display:block;height:50px;margin:0 auto 12px;width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="#000000"><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></svg></div><p style="color:#c9c8cd;font-family:Arial,sans-serif;font-size:14px;line-height:17px;margin-bottom:0;margin-top:8px;overflow:hidden;padding:8px 0 7px;text-align:center;text-overflow:ellipsis;white-space:nowrap;"><a href="https://www.instagram.com/reel/DXXNpxPsjvJ/?utm_source=ig_embed&utm_campaign=loading" style="color:#c9c8cd;font-family:Arial,sans-serif;font-size:14px;font-style:normal;font-weight:normal;line-height:17px;text-decoration:none;" target="_blank">A post shared by ALWAYS IN MOTION (@alwaysinmotion__)</a></p></div></blockquote></div>`
-        },
-        description: '<p>Skating Cam Op for this piece.</p>',
-        photos: []
-      },
-    };
-
-    // ── CLIP SIZING ───────────────────────────────────────────────────────────
-    function sizeClips() {
-      if (window.innerWidth <= 768) return;
-      document.querySelectorAll('.project-row').forEach(row => {
-        const scroll = row.querySelector('.project-row-scroll');
-        if (!scroll) return;
-        const h = scroll.getBoundingClientRect().height;
-        row.querySelectorAll('.clip').forEach(clip => {
-          clip.style.height = Math.floor(h * 0.92) + 'px';
-        });
-      });
-    }
-
-    window.addEventListener('resize', sizeClips);
-    requestAnimationFrame(() => requestAnimationFrame(sizeClips));
-
-    // ── HELPERS ───────────────────────────────────────────────────────────────
-    const isMobile = () => window.innerWidth <= 768;
-
-    function clearActive() {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-      document.getElementById('brand-btn').classList.remove('active');
-    }
-
-    // ── NAVIGATION ────────────────────────────────────────────────────────────
-    function showCategory(id, btn) {
-      clearActive();
-      document.getElementById(id).classList.add('active');
-      if (btn) btn.classList.add('active');
-      scrollToTop();
-      requestAnimationFrame(sizeClips);
-      bindWheelHandlers();
-    }
-
-    function showAbout() {
-      clearActive();
-      document.getElementById('about').classList.add('active');
-      document.getElementById('brand-btn').classList.add('active');
-      scrollToTop();
-    }
-
-    function openProject(projectId) {
-      const project = PROJECTS[projectId];
-      if (!project) return;
-
-      document.getElementById('project-title').textContent = project.title.toUpperCase();
-
-      // Build media section
-      const mediaEl = document.getElementById('project-media');
-      mediaEl.innerHTML = '';
-
-      if (project.media) {
-        const m = project.media;
-
-        if (m.type === 'youtube') {
-          const wrap = document.createElement('div');
-          wrap.className = 'project-embed-wrapper';
-          const iframe = document.createElement('iframe');
-          iframe.src = m.url;
-          iframe.setAttribute('allowfullscreen', '');
-          wrap.appendChild(iframe);
-          mediaEl.appendChild(wrap);
-
-        } else if (m.type === 'vimeo' || m.type === 'instagram') {
-          // Raw HTML embed (Vimeo responsive wrapper or Instagram blockquote)
-          mediaEl.innerHTML = m.html;
-          // Re-run Instagram embed script if needed
-          if (m.type === 'instagram' && window.instgrm) {
-            window.instgrm.Embeds.process();
+        // Get active panel based on current mouse position
+        for (const panel of document.querySelectorAll(".menu-panel")) {
+          if (panel.getBoundingClientRect().contains(event.clientX, event.clientY)) {
+            activePanel = panel;
+            break;
           }
+        }
 
-        } else if (m.type === 'multi') {
-          // Horizontally scrollable row of YouTube iframes
-          const scrollWrap = document.createElement('div');
-          scrollWrap.className = 'multi-embed-scroll';
-          m.videos.forEach(url => {
-            const item = document.createElement('div');
-            item.className = 'embed-item';
-            const iframe = document.createElement('iframe');
-            iframe.src = url;
-            iframe.setAttribute('allowfullscreen', '');
-            item.appendChild(iframe);
-            scrollWrap.appendChild(item);
-          });
-          mediaEl.appendChild(scrollWrap);
-          // Wheel → horizontal scroll, same behaviour as project row strips
-          scrollWrap.onwheel = e => {
-            e.preventDefault();
-            e.stopPropagation();
-            scrollWrap.scrollLeft += e.deltaY;
-          };
+        // Remove active class from previous panel
+        for (const panel of document.querySelectorAll(".menu-panel")) {
+          if (panel !== activePanel) {
+            panel.classList.remove(activeClass);
+          }
         }
       }
 
-      // Description
-      const bodyEl = document.getElementById('project-body');
-      bodyEl.innerHTML = project.description;
-
-      // Photos
-      if (project.photos && project.photos.length) {
-        const grid = document.createElement('div');
-        grid.className = 'project-photos';
-        project.photos.forEach(src => {
-          const img = document.createElement('img');
-          img.src = src; img.alt = '';
-          grid.appendChild(img);
-        });
-        bodyEl.appendChild(grid);
-      }
-
-      document.getElementById('project-back-btn').onclick = () => showCategory(project.category);
-
-      clearActive();
-      document.getElementById('project-page').classList.add('active');
-      scrollToTop();
-    }
-
-    function scrollToTop() {
-      if (isMobile()) {
-        window.scrollTo(0, 0);
-      } else {
-        document.getElementById('project-page').scrollTop = 0;
-        document.getElementById('about').scrollTop = 0;
-      }
-    }
-
-    // ── ROW INTERACTIONS ──────────────────────────────────────────────────────
-    document.querySelectorAll('.project-row').forEach(row => {
-      row.addEventListener('click', () => openProject(row.dataset.projectId));
-
-      row.addEventListener('mouseenter', () => {
-        if (row.dataset.noVideo !== undefined) return;
-        row.querySelectorAll('.clip video').forEach(v => {
-          if (!v.src && v.dataset.src) v.src = v.dataset.src;
-          if (v.readyState === 0) v.load();
-          v.play().catch(() => {});
-        });
-      });
-
-      row.addEventListener('mouseleave', () => {
-        if (row.dataset.noVideo !== undefined) return;
-        row.querySelectorAll('.clip video').forEach(v => v.pause());
-      });
-
-      row.addEventListener('touchstart', () => {
-        if (row.dataset.noVideo !== undefined) return;
-        row.querySelectorAll('.clip video').forEach(v => {
-          if (v.readyState === 0) v.load();
-          v.play().catch(() => {});
-        });
-      }, { passive: true });
-    });
-
-    // ── WHEEL → HORIZONTAL SCROLL ─────────────────────────────────────────────
-    function bindWheelHandlers() {
-      if (isMobile()) return;
-      document.querySelectorAll('.project-row-scroll').forEach(strip => {
-        strip.onwheel = e => {
-          e.preventDefault();
-          e.stopPropagation();
-          strip.scrollLeft += e.deltaY;
-        };
-      });
-    }
-
-    window.addEventListener('resize', bindWheelHandlers);
-
-    // ── LANDING ───────────────────────────────────────────────────────────────
-    document.getElementById('landing').addEventListener('click', function () {
-      this.classList.add('fading');
-      setTimeout(() => this.classList.add('hidden'), 1200);
-    });
-
-    // ── INIT ──────────────────────────────────────────────────────────────────
-    document.querySelector('.menu button').classList.add('active');
-    bindWheelHandlers();
-  </script>
-</body>
+      menuBtn.addEventListener("click", toggleMenu);
+    </script>
+  </body>
 </html>
+```
+
+CSS code:
+
+```css
+/* Panels */
+.menu-panel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.categories {
+  background-color: #e9ecef;
+  position: absolute;
+  top: -60px;
+  left: 10%;
+  width: 80%;
+  height: auto;
+  padding: 20px;
+}
+
+.categories ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categories li {
+  display: block;
+  cursor: pointer;
+  background-color: #fff;
+  position: relative;
+  padding: 10px 20px;
+}
+
+.categories li:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Project Showcase */
+.menu-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.projects li {
+  display: block;
+  cursor: pointer;
+  background-color: #fff;
+  position: relative;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.projects li:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Navigation */
+.menu button {
+  position: absolute;
+  top: -60px;
+  left: 5%;
+  width: 100%;
+  height: auto;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.menu button i {
+  color: #fff;
+  font-size: 30px;
+  transition: all 0.3s ease;
+}
+
+/* Project Showcase */
+.projects li a {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.projects li a h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Project Showcase */
+.projects img {
+  width: 100%;
+  height: auto;
+}
+```
